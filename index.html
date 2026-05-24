@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarrierReadiness | AI-Powered Carrier Onboarding Readiness Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+:root{
+  /* CarrierReadiness  Light Violet / Purple Theme */
+  --blue:#6B21A8;
+  --blue-light:#7C3AED;
+  --blue-dim:#5B21B6;
+  --blue-dark:#4C1D95;
+  --blue-deeper:#2E1065;
+
+  --accent:#A855F7;
+  --accent-light:#EDE9FE;
+  --accent-dim:#C084FC;
+
+  /* Nav / Footer BG  Deep Violet */
+  --nav-bg:#5B21B6;
+  --footer-bg:#2E1065;
+
+  /* Page Backgrounds  white + soft violet tints */
+  --bg-white:#FDFBFF;
+  --bg-light:#F5F3FF;
+  --bg-section:#EDE9FE;
+  --bg-card:#FDFBFF;
+
+  --card-border:rgba(107,33,168,0.15);
+  --card-border-strong:rgba(107,33,168,0.35);
+
+  --text-dark:#1A0A2E;
+  --text-mid:#3B1C6E;
+  --text-muted:#6B5A8E;
+  --text-light:#9D8CBE;
+  --white:#FFFFFF;
+
+  --nav-h:72px;
+  --max-w:1200px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --display:'Sora',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+  --ease-out:cubic-bezier(0,0,0.2,1);
+}
+
+body{font-family:var(--font);color:var(--text-dark);background:var(--bg-white);overflow-x:hidden;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg-light);}
+::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px;}
+
+img{display:block;max-width:100%;}
+
+/* ─── NAVBAR ──────────────────────────────────────────── */
+.navbar{
+  position:fixed;top:0;left:0;width:100%;height:var(--nav-h);
+  background:var(--nav-bg);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  z-index:1000;display:flex;align-items:center;
+  padding:0 clamp(16px,5vw,60px);
+  justify-content:space-between;
+  transition:border-color 0.3s;
+  box-shadow:0 2px 24px rgba(91,33,182,0.35);
+}
+.nav-logo{
+  font-family:var(--display);font-size:18px;font-weight:800;
+  color:var(--white);letter-spacing:-0.3px;
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;text-decoration:none;flex-shrink:0;
+}
+.nav-logo-icon{
+  width:40px;height:40px;
+  background:rgba(255,255,255,0.2);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+  font-size:18px;color:#fff;
+}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1;}
+.nav-logo-text span{font-size:10px;font-family:var(--mono);font-weight:500;color:rgba(255,255,255,0.7);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links li button{
+  background:none;border:none;
+  color:rgba(255,255,255,0.85);
+  font-size:11px;font-weight:600;
+  padding:8px 14px;border-radius:7px;
+  transition:all 0.22s var(--ease);
+  cursor:pointer;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;
+  position:relative;white-space:nowrap;
+}
+.nav-links li button:hover{color:#fff;background:rgba(255,255,255,0.15);}
+.nav-links li button.active{color:#fff;background:rgba(255,255,255,0.2);}
+.nav-links li button.active::after{
+  content:'';position:absolute;bottom:5px;left:50%;
+  transform:translateX(-50%);width:14px;height:2px;
+  background:var(--white);border-radius:2px;
+}
+
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-demo-nav{
+  background:var(--white);
+  color:var(--blue-dark);border:none;padding:9px 20px;border-radius:8px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  transition:all 0.22s;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 2px 10px rgba(0,0,0,0.15);
+}
+.btn-demo-nav:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,0.25);background:var(--accent-light);}
+
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;flex-shrink:0;}
+.hamburger span{width:22px;height:2px;background:#fff;border-radius:2px;transition:0.3s;display:block;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.mobile-nav{
+  display:none;position:fixed;top:var(--nav-h);left:0;width:100%;
+  background:var(--blue-dark);backdrop-filter:blur(20px);
+  padding:12px 20px 20px;flex-direction:column;gap:2px;
+  z-index:999;border-bottom:1px solid rgba(255,255,255,0.1);
+  animation:slideDown 0.25s var(--ease-out);
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mobile-nav.open{display:flex;}
+.mobile-nav button{
+  background:none;border:none;color:rgba(255,255,255,0.8);
+  font-size:13px;font-weight:600;padding:13px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;font-family:var(--mono);text-align:left;
+  text-transform:uppercase;letter-spacing:1px;
+  transition:color 0.2s,background 0.2s;border-radius:6px;
+}
+.mobile-nav button:hover{color:#fff;background:rgba(255,255,255,0.1);}
+.mobile-nav .mob-cta{
+  margin-top:8px;background:var(--white);
+  color:var(--blue-dark);border:none;padding:13px;
+  border-radius:8px;font-weight:700;font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  font-family:var(--mono);
+}
+
+/* ─── PAGE SYSTEM ─────────────────────────────────────── */
+.page{display:none;min-height:100vh;padding-top:var(--nav-h);}
+.page.active{display:block;animation:pgIn 0.35s var(--ease);}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── SECTION COMMONS ─────────────────────────────────── */
+.label-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--blue-dim);margin-bottom:14px;
+}
+.label-tag::before{content:'';width:20px;height:1px;background:var(--blue);}
+.label-tag-white{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,0.8);margin-bottom:14px;
+}
+.label-tag-white::before{content:'';width:20px;height:1px;background:rgba(255,255,255,0.6);}
+
+.section-h2{
+  font-family:var(--display);font-size:clamp(28px,3.5vw,52px);
+  font-weight:800;line-height:1.1;letter-spacing:-0.8px;
+  margin-bottom:10px;
+}
+.section-h2.blue-txt{color:var(--blue-dark);}
+.section-h2.dark{color:var(--text-dark);}
+.section-h2.white{color:var(--white);}
+
+.section-divider{width:56px;height:3px;margin:16px 0 28px;border-radius:2px;}
+.divider-blue{background:linear-gradient(90deg,var(--blue),transparent);}
+.divider-white{background:linear-gradient(90deg,rgba(255,255,255,0.8),transparent);}
+.divider-center{margin:16px auto 28px;}
+
+.para-dark{color:var(--text-mid);line-height:1.85;font-size:17px;}
+.para-light{color:rgba(255,255,255,0.85);line-height:1.85;font-size:17px;}
+
+.container{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+
+/* ─── BUTTONS ─────────────────────────────────────────── */
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+  color:var(--white);padding:13px 28px;border-radius:8px;
+  text-decoration:none;font-weight:700;font-size:12px;
+  letter-spacing:0.8px;text-transform:uppercase;
+  transition:all 0.25s;font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(107,33,168,0.35);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(107,33,168,0.5);}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid var(--blue);color:var(--blue-dark);
+  padding:12px 28px;border-radius:8px;text-decoration:none;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);background:none;cursor:pointer;
+}
+.btn-secondary:hover{background:rgba(107,33,168,0.08);border-color:var(--blue-dim);}
+
+.btn-white{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--white);color:var(--blue-dark);
+  padding:12px 28px;border-radius:8px;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,0.12);
+}
+.btn-white:hover{transform:translateY(-2px);background:var(--accent-light);box-shadow:0 8px 28px rgba(0,0,0,0.2);}
+
+/* ─── STATUS BADGES ─────────────────────────────── */
+.risk-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;
+  font-size:10px;font-weight:700;font-family:var(--mono);letter-spacing:0.5px;
+}
+.risk-blue{background:rgba(107,33,168,0.1);color:var(--blue-dim);border:1px solid rgba(107,33,168,0.28);}
+.risk-light{background:rgba(237,233,254,0.8);color:var(--blue-dark);border:1px solid rgba(107,33,168,0.25);}
+.risk-green{background:rgba(16,185,129,0.1);color:#059669;border:1px solid rgba(16,185,129,0.25);}
+.risk-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* ─── HERO ─────────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(140deg,#F5F3FF 0%,#EDE9FE 40%,#DDD6FE 100%);
+  padding:clamp(60px,10vw,100px) 0 clamp(50px,8vw,80px);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-80px;right:-80px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(107,33,168,0.12) 0%,transparent 70%);
+}
+.hero-inner{
+  max-width:var(--max-w);margin:0 auto;
+  padding:0 clamp(16px,4vw,60px);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);
+  align-items:center;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(107,33,168,0.12);border:1px solid rgba(107,33,168,0.3);
+  border-radius:30px;padding:6px 16px;
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  color:var(--blue-dim);letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:22px;
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+h1{
+  font-family:var(--display);font-size:clamp(34px,5vw,64px);
+  font-weight:800;line-height:1.06;letter-spacing:-1.5px;color:var(--text-dark);
+  margin-bottom:6px;
+}
+h1 .blue{color:var(--blue);}
+h1 .dark-blue{color:var(--blue-dark);}
+.hero-rule{width:48px;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue-light));border-radius:2px;margin:20px 0;}
+.hero-body{font-size:17px;color:var(--text-mid);line-height:1.8;margin-bottom:28px;max-width:540px;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+
+.hero-mini-stats{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;}
+.hero-mini-card{
+  background:rgba(255,255,255,0.85);
+  border:1px solid rgba(107,33,168,0.2);
+  border-radius:12px;padding:14px 18px;min-width:140px;
+  backdrop-filter:blur(8px);
+}
+.hero-mini-card strong{
+  display:block;font-family:var(--display);
+  font-size:22px;font-weight:800;color:var(--blue-dark);
+}
+.hero-mini-card span{font-size:11px;color:var(--text-muted);font-family:var(--mono);}
+
+/* DASHBOARD CARD */
+.score-card{
+  background:#fff;border-radius:18px;
+  border:1px solid rgba(107,33,168,0.18);
+  padding:24px;box-shadow:0 8px 40px rgba(107,33,168,0.12);
+}
+.score-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;}
+.score-card-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+.dashboard-title{font-family:var(--display);font-size:17px;font-weight:700;color:var(--text-dark);}
+.live-dot-wrap{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--blue);letter-spacing:1.5px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse 1.5s infinite;}
+.score-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(107,33,168,0.08);}
+.score-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;flex-shrink:0;}
+.score-icon.blue-bg{background:rgba(107,33,168,0.12);color:var(--blue-dim);}
+.score-icon.light-bg{background:rgba(237,233,254,0.6);color:var(--blue-dark);}
+.score-icon.green-bg{background:rgba(16,185,129,0.1);color:#059669;}
+.score-lbl{flex:1;font-size:12px;color:var(--text-muted);}
+.score-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text-dark);}
+.score-big{display:flex;align-items:center;gap:16px;margin-top:18px;padding:16px;background:linear-gradient(135deg,rgba(107,33,168,0.08),rgba(237,233,254,0.25));border-radius:12px;border:1px solid rgba(107,33,168,0.15);}
+.score-big-num{font-family:var(--display);font-size:48px;font-weight:800;color:var(--blue);line-height:1;}
+.score-big-info .label{font-size:13px;font-weight:700;color:var(--text-dark);}
+.score-big-info .sub{font-size:11px;color:var(--text-muted);margin-top:3px;font-family:var(--mono);}
+
+/* ─── STATS STRIP ─────────────────────────────────────── */
+.section-blue{
+  background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue-deeper) 100%);
+  padding:clamp(60px,8vw,96px) 0;
+}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px;
+}
+.stat-card{
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);
+  border-radius:16px;padding:clamp(20px,3vw,30px);
+  text-align:center;transition:transform 0.25s,border-color 0.25s;
+}
+.stat-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.3);}
+.stat-num{font-family:var(--display);font-size:clamp(32px,4vw,48px);font-weight:800;color:#fff;margin-bottom:10px;}
+.stat-lbl{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;}
+
+/* ─── PLATFORM SECTION ─────────────────────────────────── */
+.platform-section{background:var(--bg-white);padding:clamp(60px,8vw,96px) 0;}
+.platform-sub{max-width:760px;margin-bottom:44px;color:var(--text-mid);}
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+.platform-card{
+  background:#fff;border:1px solid rgba(107,33,168,0.15);
+  border-radius:18px;overflow:hidden;
+  transition:border-color 0.3s,box-shadow 0.3s,transform 0.3s;
+  box-shadow:0 2px 12px rgba(107,33,168,0.06);
+}
+.platform-card:hover{border-color:rgba(107,33,168,0.35);box-shadow:0 12px 40px rgba(107,33,168,0.12);transform:translateY(-3px);}
+.platform-img-wrap{width:100%;height:180px;overflow:hidden;background:linear-gradient(135deg,var(--bg-light),var(--bg-section));}
+.platform-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.platform-card .inner{padding:22px;}
+.element-badge{
+  display:inline-block;background:rgba(107,33,168,0.1);
+  color:var(--blue-dim);border-radius:6px;
+  padding:3px 10px;font-family:var(--mono);font-size:9px;
+  font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:12px;border:1px solid rgba(107,33,168,0.18);
+}
+.platform-card h3{font-family:var(--display);font-size:17px;font-weight:700;color:var(--text-dark);margin-bottom:10px;line-height:1.3;}
+.platform-card p{font-size:13px;color:var(--text-muted);line-height:1.75;}
+.more-text{display:none;font-size:13px;color:var(--text-muted);line-height:1.75;margin-top:10px;padding-top:10px;border-top:1px solid rgba(107,33,168,0.1);}
+.platform-card.open .more-text{display:block;}
+.expand-btn{
+  margin-top:16px;background:none;border:1px solid rgba(107,33,168,0.28);
+  color:var(--blue-dim);padding:7px 18px;border-radius:7px;
+  font-size:11px;font-weight:700;cursor:pointer;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;transition:all 0.2s;
+}
+.expand-btn:hover{background:rgba(107,33,168,0.08);border-color:var(--blue);}
+
+/* ─── WHY SECTION ─────────────────────────────────────── */
+.why-section{background:var(--bg-light);padding:clamp(60px,8vw,96px) 0;}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px;}
+.why-card{
+  background:#fff;border:1px solid rgba(107,33,168,0.15);
+  border-radius:16px;padding:clamp(20px,3vw,30px);
+  transition:border-color 0.25s,box-shadow 0.25s;
+}
+.why-card:hover{border-color:rgba(107,33,168,0.35);box-shadow:0 8px 28px rgba(107,33,168,0.1);}
+.why-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(107,33,168,0.12),rgba(237,233,254,0.3));
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;font-size:20px;color:var(--blue);
+  border:1px solid rgba(107,33,168,0.18);
+}
+.why-card h4{font-family:var(--display);font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:10px;}
+.why-card p{font-size:13px;color:var(--text-muted);line-height:1.75;}
+
+/* ─── SECTION LIGHT / ALT ─────────────────────────────── */
+.section-light{background:var(--bg-white);padding:clamp(60px,8vw,96px) 0;}
+.section-alt{background:var(--bg-light);padding:clamp(60px,8vw,96px) 0;}
+
+/* ─── MARKET CHARTS ─────────────────────────────────────── */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:44px;}
+.chart-card{
+  background:#fff;border:1px solid rgba(107,33,168,0.15);
+  border-radius:18px;padding:24px;
+  box-shadow:0 4px 16px rgba(107,33,168,0.06);
+}
+.chart-card h4{font-family:var(--display);font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
+.chart-card p{font-size:12px;color:var(--text-muted);margin-bottom:20px;font-family:var(--mono);}
+.chart-wrap{height:260px;position:relative;}
+
+/* ─── ABOUT PAGE ─────────────────────────────────────────── */
+.about-hero{
+  background:linear-gradient(140deg,#EDE9FE 0%,#DDD6FE 60%,#C4B5FD 100%);
+  padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);
+  position:relative;overflow:hidden;
+}
+.about-hero::after{
+  content:'';position:absolute;bottom:-60px;left:-60px;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(107,33,168,0.15) 0%,transparent 70%);
+}
+.about-hero .container{position:relative;z-index:1;}
+.founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:44px;}
+.founder-card{
+  background:#fff;border:1px solid rgba(107,33,168,0.15);
+  border-radius:18px;padding:clamp(20px,3vw,36px);
+  box-shadow:0 4px 20px rgba(107,33,168,0.08);
+}
+.founder-img{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-dark));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:24px;font-weight:800;color:#fff;margin-bottom:16px;}
+.founder-card h3{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
+.founder-card .role{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dim);margin-bottom:14px;}
+.founder-card p{font-size:13px;color:var(--text-muted);line-height:1.8;}
+.founder-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.f-badge{background:rgba(107,33,168,0.08);border:1px solid rgba(107,33,168,0.18);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--blue-dim);letter-spacing:0.5px;}
+
+/* ─── FAQ ─────────────────────────────────────────────── */
+.faq-wrap{display:flex;flex-direction:column;gap:12px;margin-top:32px;}
+.faq-item{background:#fff;border:1px solid rgba(107,33,168,0.15);border-radius:14px;overflow:hidden;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;gap:16px;}
+.faq-q h4{font-family:var(--display);font-size:15px;font-weight:600;color:var(--text-dark);}
+.faq-icon{font-size:20px;font-weight:300;color:var(--blue);flex-shrink:0;transition:transform 0.3s;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-body{display:none;padding:0 22px 18px;font-size:14px;color:var(--text-muted);line-height:1.8;border-top:1px solid rgba(107,33,168,0.08);}
+.faq-item.open .faq-body{display:block;}
+
+/* ─── PRICING ─────────────────────────────────────────── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:44px;}
+.price-card{
+  background:#fff;border:1px solid rgba(107,33,168,0.15);
+  border-radius:18px;padding:clamp(22px,3vw,36px);
+  position:relative;transition:border-color 0.25s,box-shadow 0.25s,transform 0.25s;
+  box-shadow:0 4px 16px rgba(107,33,168,0.06);
+}
+.price-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(107,33,168,0.14);}
+.price-card.featured{
+  border:2px solid var(--blue);
+  box-shadow:0 8px 40px rgba(107,33,168,0.18);
+  transform:scale(1.03);
+}
+.price-card.featured:hover{transform:scale(1.03) translateY(-4px);}
+.featured-label{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+  color:#fff;padding:4px 18px;border-radius:20px;
+  font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  white-space:nowrap;
+}
+.price-tier{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dim);margin-bottom:8px;}
+.price-title{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px;}
+.price-amount{font-family:var(--display);font-size:clamp(34px,4vw,48px);font-weight:800;color:var(--blue-dark);line-height:1;}
+.price-amount span{font-size:16px;font-weight:500;color:var(--text-muted);}
+.price-desc{font-size:13px;color:var(--text-muted);margin:12px 0 20px;line-height:1.6;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.price-features li{font-size:13px;color:var(--text-mid);display:flex;align-items:flex-start;gap:8px;}
+.price-features li::before{content:'✓';color:var(--blue);font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* ─── PROCESS ─────────────────────────────────────────── */
+.process-step{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(30px,5vw,72px);align-items:center;
+  margin-bottom:clamp(56px,8vw,96px);
+}
+.process-step:last-child{margin-bottom:0;}
+.step-num{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-dim);margin-bottom:12px;}
+.step-h3{font-family:var(--display);font-size:clamp(22px,2.5vw,32px);font-weight:800;color:var(--text-dark);margin-bottom:16px;line-height:1.2;}
+.step-p{color:var(--text-muted);font-size:15px;line-height:1.8;margin-bottom:18px;}
+.step-img{width:100%;aspect-ratio:16/10;border-radius:16px;border:1px solid rgba(107,33,168,0.15);overflow:hidden;box-shadow:0 8px 32px rgba(107,33,168,0.1);}
+.step-img img{width:100%;height:100%;object-fit:cover;}
+
+/* ─── CONTACT ─────────────────────────────────────────── */
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:44px;}
+.contact-form{background:#fff;border:1px solid rgba(107,33,168,0.15);border-radius:20px;padding:clamp(24px,4vw,40px);box-shadow:0 4px 20px rgba(107,33,168,0.08);}
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--text-mid);margin-bottom:7px;font-family:var(--mono);letter-spacing:0.5px;text-transform:uppercase;}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:11px 14px;border-radius:8px;
+  border:1.5px solid rgba(107,33,168,0.2);font-size:14px;font-family:var(--font);
+  color:var(--text-dark);background:#fff;
+  transition:border-color 0.2s,box-shadow 0.2s;outline:none;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(107,33,168,0.1);}
+.form-group textarea{min-height:120px;resize:vertical;}
+.contact-info{display:flex;flex-direction:column;gap:0;}
+.contact-info h3{font-family:var(--display);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:16px;}
+.contact-info p{font-size:15px;color:var(--text-muted);line-height:1.7;margin-bottom:28px;}
+.contact-detail{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid rgba(107,33,168,0.1);}
+.contact-detail .icon{width:44px;height:44px;background:rgba(107,33,168,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0;font-size:18px;}
+.contact-detail .text strong{display:block;font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:2px;}
+.contact-detail .text span{font-size:13px;color:var(--text-muted);}
+
+/* ─── FOOTER ─────────────────────────────────────────── */
+footer{background:var(--footer-bg);padding:clamp(48px,6vw,80px) 0 0;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+.footer-brand{font-family:var(--display);font-size:22px;font-weight:800;color:#fff;margin-bottom:14px;}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.8;margin-bottom:20px;}
+.footer-badges{display:flex;flex-wrap:wrap;gap:8px;}
+.footer-badge{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.8);letter-spacing:0.5px;}
+.footer-col-title{font-family:var(--mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:16px;}
+.footer-col{display:flex;flex-direction:column;gap:10px;}
+.footer-col a{font-size:13px;color:rgba(255,255,255,0.65);cursor:pointer;transition:color 0.2s;}
+.footer-col a:hover{color:#fff;}
+.footer-bottom-bar{border-top:1px solid rgba(255,255,255,0.1);padding:20px 0;display:flex;align-items:center;justify-content:space-between;}
+.footer-bottom-bar p{font-size:12px;color:rgba(255,255,255,0.45);font-family:var(--mono);}
+.footer-bottom-bar p span{color:rgba(255,255,255,0.7);}
+.footer-bottom-links{display:flex;gap:20px;}
+.footer-bottom-links a{font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer;font-family:var(--mono);transition:color 0.2s;}
+.footer-bottom-links a:hover{color:rgba(255,255,255,0.85);}
+
+/* ─── COMPARISON TABLE ───────────────────────── */
+.comp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:40px;border-radius:16px;border:1px solid rgba(107,33,168,0.15);box-shadow:0 4px 16px rgba(107,33,168,0.06);}
+.comp-table{width:100%;border-collapse:collapse;background:#fff;}
+.comp-table th{background:linear-gradient(135deg,var(--blue-dark),var(--blue-deeper));color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:16px 18px;text-align:left;}
+.comp-table th:first-child{border-radius:16px 0 0 0;}
+.comp-table th:last-child{border-radius:0 16px 0 0;}
+.comp-table td{padding:14px 18px;font-size:13px;color:var(--text-mid);border-bottom:1px solid rgba(107,33,168,0.08);}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table tr:hover td{background:rgba(107,33,168,0.03);}
+.comp-table td:first-child{font-weight:600;color:var(--text-dark);}
+.comp-table .yes{color:#059669;font-weight:700;}
+.comp-table .no{color:#94a3b8;font-weight:500;}
+.comp-table .highlight-col{background:rgba(107,33,168,0.06);}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .btn-demo-nav{display:none;}
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
+  .hero-inner > div:last-child{display:none;}
+  .hero .hero-mini-stats{display:none;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .platform-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr 1fr;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .price-card.featured{transform:scale(1);}
+  .process-step{grid-template-columns:1fr;gap:28px;}
+  .step-img{aspect-ratio:16/9;}
+  .contact-wrap{grid-template-columns:1fr;}
+  .charts-grid{grid-template-columns:1fr;}
+  .founders-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .footer-bottom-bar{flex-direction:column;align-items:flex-start;gap:10px;}
+  .footer-bottom-links{flex-wrap:wrap;gap:12px;}
+  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important;}
+  [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr !important;}
+  .platform-grid[style*="grid-template-columns:repeat(2,1fr)"]{grid-template-columns:1fr !important;}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr;}
+  .hero-mini-stats{flex-direction:column;}
+  .hero-mini-card{min-width:unset;width:100%;}
+  .btn-primary,.btn-secondary,.btn-white{width:100%;justify-content:center;}
+  .footer-bottom-links{flex-direction:column;gap:8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a class="nav-logo" onclick="showPage('home')">
+    <div class="nav-logo-icon"><i class="fas fa-truck-fast"></i></div>
+    <div class="nav-logo-text">
+      CarrierReadiness
+      <span>Carrier Onboarding Intelligence</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><button id="nav-home" class="active" onclick="showPage('home')">Home</button></li>
+    <li><button id="nav-about" onclick="showPage('about')">About</button></li>
+    <li><button id="nav-platform" onclick="showPage('platform')">Platform</button></li>
+    <li><button id="nav-market" onclick="showPage('market')">Market</button></li>
+    <li><button id="nav-process" onclick="showPage('process')">Process</button></li>
+    <li><button id="nav-faq" onclick="showPage('faq')">FAQ</button></li>
+    <li><button id="nav-pricing" onclick="showPage('pricing')">Pricing</button></li>
+    <li><button id="nav-contact" onclick="showPage('contact')">Contact</button></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-demo-nav" onclick="showPage('contact')">Request Demo</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <button onclick="showPage('home');closeMobile()">Home</button>
+  <button onclick="showPage('about');closeMobile()">About</button>
+  <button onclick="showPage('platform');closeMobile()">Platform</button>
+  <button onclick="showPage('market');closeMobile()">Market</button>
+  <button onclick="showPage('process');closeMobile()">Process</button>
+  <button onclick="showPage('faq');closeMobile()">FAQ</button>
+  <button onclick="showPage('pricing');closeMobile()">Pricing</button>
+  <button onclick="showPage('contact');closeMobile()">Contact</button>
+  <button class="mob-cta" onclick="showPage('contact');closeMobile()">Request Demo →</button>
+</div>
+
+
+<!-- ═══ PAGE: HOME ═══ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          UK's First AI Carrier Onboarding Readiness Platform
+        </div>
+        <h1>
+          Assess.<br>
+          <span class="blue">Validate.</span>
+          <span class="dark-blue">Onboard.</span>
+        </h1>
+        <div class="hero-rule"></div>
+        <p class="hero-body">
+          CarrierReadiness (CORP) is an intelligent, end-to-end workflow automation platform for global logistics and 3PL sectors. We eliminate the "Readiness Gap"  turning passive carrier compliance into active risk-control. Verify carrier identity, automate compliance gates, and scale your fleet with confidence.
+        </p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Book a Platform Demo</button>
+          <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+        </div>
+       
+      </div>
+      <!-- LIVE DASHBOARD CARD -->
+      <div>
+        <div class="score-card">
+          <div class="score-card-top">
+            <div>
+              <div class="score-card-label">CarrierReadiness · Live Engine</div>
+              <h3 class="dashboard-title">Carrier Readiness Dashboard</h3>
+            </div>
+            <div class="live-dot-wrap"><span class="live-dot"></span>LIVE</div>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">OS</div>
+            <span class="score-lbl">Onboarding Speed Improvement</span>
+            <span class="score-val">+28% ↑ This Month</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon green-bg">CR</div>
+            <span class="score-lbl">Compliance Error Reduction</span>
+            <span class="score-val">−22% ↓ Avg</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon light-bg">DA</div>
+            <span class="score-lbl">Document Accuracy Score</span>
+            <span class="score-val">95.4% ↑ High</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">RR</div>
+            <span class="score-lbl">Carrier Retention Rate</span>
+            <span class="score-val">+25% ↑ Stronger</span>
+          </div>
+          <div class="score-big">
+            <div class="score-big-num">87<span style="font-size:24px;">/100</span></div>
+            <div class="score-big-info">
+              <div class="label">Onboarding Readiness Score</div>
+              <div class="sub">AI-Driven · FMCSA Compliant · Status: Ready</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <section class="section-blue">
+    <div class="container">
+      <div class="label-tag-white">The UK Logistics Readiness Crisis</div>
+      <h2 class="section-h2 white">UK Logistics SMEs Are Losing Millions to<br>The Carrier Readiness Gap.</h2>
+      <div class="section-divider divider-white"></div>
+      <p class="para-light" style="max-width:760px;">
+        The global carrier onboarding and compliance market was valued at $1.3 billion in 2024. Yet 97% of supply chain professionals say digital onboarding is crucial, while only 12% feel their process is well-executed. Cargo fraud increased 93% between 2021–2024. CarrierReadiness transforms fragmented compliance checks into verifiable operational assets  protecting margins and accelerating fleet scalability.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">93%</div>
+          <div class="stat-lbl">Rise in cargo theft and strategic fraud between 2021–2024  driven by fake carriers and shell companies</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">4–8 wks</div>
+          <div class="stat-lbl">Average time to manually vet and onboard a single carrier  CORP reduces this by 60% using AI readiness gates</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">88%</div>
+          <div class="stat-lbl">Of logistics tasks require manual human oversight today  CORP automates the readiness governance layer</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£10.6K</div>
+          <div class="stat-lbl">Lost per employee annually to manual carrier verification  the hidden "Compliance Verification Tax"</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLATFORM PREVIEW -->
+  <section class="platform-section">
+    <div class="container">
+      <div class="label-tag">Core Intelligence Modules</div>
+      <h2 class="section-h2 dark">Five Modules. One Complete Carrier Readiness Platform.</h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark platform-sub">
+        CarrierReadiness combines AI-Powered Assessment, Automated Document Verification, Risk Management, Compliance Assurance, and Trusted Partnership Networks into one unified SaaS platform  no-code, real-time, data-driven.
+      </p>
+      <div class="platform-grid">
+        <!-- CARD 1 -->
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <img src="carrier1.jpg" alt="AI Smart Risk Scoring">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 01</div>
+            <h3>Smart Risk Scoring</h3>
+            <p>AI-driven scoring model to predict carrier reliability and risk. Build a Readiness Fingerprint for every carrier in your network.</p>
+            <div class="more-text">CORP Readiness Fingerprinting uses machine learning to identify the patterns of successful, low-risk carrier profiles  benchmarking and cloning "high-trust" onboarding criteria across your entire carrier network. Safety records, regional compliance norms, and communication habits are synthesised into a single operational risk score.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+        <!-- CARD 2 -->
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <img src="carrier2.jpg" alt="Document Verification">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 02</div>
+            <h3>Automated Document Verification</h3>
+            <p>Reduce manual work and eliminate document errors. Collect, organise, and verify all required carrier documents automatically.</p>
+            <div class="more-text">The Readiness-Failure Forensics Engine (RFFE) automatically diagnoses the root causes of "onboarding stalls" by analysing the delta between required documentation and submitted carrier data  whether a pending W-9, sub-threshold safety rating, or expired ELD certificate  and provides actionable resolution steps.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+        <!-- CARD 3 -->
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <img src="carrier3.jpg" alt="Compliance Assurance">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 03</div>
+            <h3>Compliance Assurance</h3>
+            <p>Ensure FMCSA, insurance, safety, and regulatory compliance. Built specifically for the October 2025 USDOT unified mandate.</p>
+            <div class="more-text">The platform uses a proprietary CORP Readiness-Gate Architecture to evaluate the multi-dimensional viability of a carrier before a single load is tendered. Service-specific activation ensures a carrier approved for general haulage cannot be assigned to refrigerated or hazardous goods without the correct certifications  eliminating compliance drift at scale.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY SECTION -->
+  <section class="why-section">
+    <div class="container">
+      <div class="label-tag">Why CarrierReadiness</div>
+      <h2 class="section-h2 dark">Built for the Active Readiness Era.<br>Not Just a Compliance Checkbox.</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Active Readiness-Gate Architecture</h4>
+          <p>A first-of-its-kind framework bridging raw documentation to load-tendering  creating a continuous feedback loop where carrier status is updated in real time, not just at onboarding.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-dna"></i></div>
+          <h4>Readiness Fingerprinting</h4>
+          <p>Captures proprietary "Capacity DNA" lost during staff turnover. When a transport coordinator leaves, their carrier vetting expertise is permanently encoded in the platform.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-search"></i></div>
+          <h4>Readiness-Failure Forensics</h4>
+          <p>The RFFE identifies exactly why a carrier is "not ready" and provides actionable steps  enabling a single coordinator to manage 5× the carrier volume without manual checking bottlenecks.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-plug"></i></div>
+          <h4>Model-Agnostic Integration</h4>
+          <p>Built to sit above any underlying TMS or ERP (McLeod, MercuryGate)  operators are never locked into a single software ecosystem as they expand across regions.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-leaf"></i></div>
+          <h4>ESG & Net Zero Aligned</h4>
+          <p>Generates audit-ready reports showing how structured onboarding reduces empty miles through better-matched local capacity  aligning with UK DfT and global carbon reduction goals.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-pound-sign"></i></div>
+          <h4>SME-Optimised Pricing</h4>
+          <p>Tiered SaaS from £150/month  giving UK logistics SMEs enterprise-grade carrier readiness intelligence without the cost of bespoke ERP procurement pipelines.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page home -->
+
+
+<!-- ═══ PAGE: ABOUT ═══ -->
+<div class="page" id="page-about">
+  <section class="about-hero">
+    <div class="container">
+      <div class="label-tag">About Us</div>
+      <h2 class="section-h2 dark">Built by a Transport Professional Who Lived the Problem.<br><span style="color:var(--blue-dark);">Designed for the Active Readiness Era.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">CarrierReadiness is a UK-based SaaS venture founded by Saidinesh Chinnaramannagari  combining front-line transport coordination expertise at HelloFresh with an MSc in Engineering Management from the University of Leicester to solve the most pressing challenge facing UK logistics today: the "Operational Readiness Gap" that costs the sector billions in fraud exposure, wasted dispatch time, and compliance failures.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Get in Touch</button>
+        <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision & Mission -->
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Vision & Mission</div>
+      <h2 class="section-h2 dark">To Be the Global Standard for<br>Carrier Readiness Intelligence.</h2>
+      <div class="section-divider divider-blue"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:32px;">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-eye"></i></div>
+          <h4>Our Vision</h4>
+          <p>We aspire to be the global standard for "Carrier Readiness"  fostering a future in which logistics networks operate with total capacity sovereignty, consistent reliability, and automated, data-driven risk management that prevents fraud before it occurs.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-bullseye"></i></div>
+          <h4>Our Mission</h4>
+          <p>To enable UK logistics SMEs and 3PLs to capture, standardise, and scale their fleet intelligence by leveraging CORP to maximise usable capacity, eliminate compliance friction, and protect operational margins in a volatile global freight landscape.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values -->
+  <section class="section-alt">
+    <div class="container">
+      <div class="label-tag">Core Values</div>
+      <h2 class="section-h2 dark">What Drives Everything We Build</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-lightbulb"></i></div>
+          <h4>Innovation</h4>
+          <p>Continuous refinement of "Active Readiness" models to stay ahead of regulatory shifts and evolving cargo fraud tactics across UK and US freight corridors.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-crosshairs"></i></div>
+          <h4>Accuracy</h4>
+          <p>A commitment to the forensic integrity of carrier data and the elimination of compliance "quiet failures"  ensuring 95%+ document completeness across the network.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-lock"></i></div>
+          <h4>Sovereignty</h4>
+          <p>Empowering logistics firms to own their operational vetting logic as a proprietary business asset  protecting "Capacity Equity" even through staff turnover.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-tachometer-alt"></i></div>
+          <h4>Efficiency</h4>
+          <p>Making complex carrier activation accessible through intuitive, low-friction TMS and ELD integrations  reducing onboarding cycles from weeks to hours.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-hands-helping"></i></div>
+          <h4>Empowerment</h4>
+          <p>Equipping transport managers with the technical foresight needed to scale capacity without headcount-proportional complexity or compliance risk.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-globe"></i></div>
+          <h4>ESG Impact</h4>
+          <p>Reducing UK transport "digital waste" and empty miles by 20–30% per firm through precise carrier matching and optimised Active Readiness gates.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founder -->
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Founder</div>
+      <h2 class="section-h2 dark">The Person Behind<br>CarrierReadiness</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="founders-grid">
+        <div class="founder-card">
+          <div class="founder-img">SC</div>
+          <h3>Saidinesh Chinnaramannagari</h3>
+          <div class="role">Founder & CEO · CarrierReadiness</div>
+          <p>Saidinesh possesses a unique background to establish and grow CORP in the UK, drawing on deep technical experience in engineering management, industrial logistics, and hands-on transport coordination. His career trajectory  including his current role as a Transport Assistant at HelloFresh  demonstrates a clear transition from academic engineering theory to the front lines of fleet management.<br><br>In his role at HelloFresh, Saidinesh coordinates drivers, manages route allocations, and oversees vehicle schedules while maintaining strict operational compliance. This "in-the-trenches" experience equipped him with a hands-on understanding of how transport teams function as data-driven systems. He understands that carrier onboarding is not just an admin exercise but a critical risk-control process  unlike founders who approach logistics purely from a software perspective.</p>
+          <div class="founder-badges">
+            <span class="f-badge">MSc Engineering Management · Leicester</span>
+            <span class="f-badge">BTech Mechanical Engineering</span>
+            <span class="f-badge">Transport Assistant · HelloFresh</span>
+            <span class="f-badge">Supply Chain Strategy</span>
+          </div>
+        </div>
+        <div class="founder-card" style="display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <h4 style="font-family:var(--display);font-size:18px;font-weight:700;color:var(--text-dark);margin-bottom:16px;">Deep Domain Synergy</h4>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.8;margin-bottom:20px;">While traditional logistics-tech startups are often led by generalist software developers, Saidinesh unifies operational transport management with engineering science. This background equips him with a hands-on understanding of how to link technical compliance metrics to commercial fleet outcomes.</p>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="contact-detail" style="border:none;padding:12px 0;">
+                <div class="icon"><i class="fas fa-star"></i></div>
+                <div class="text"><strong>Evidence-Based Strategy</strong><span>Direct exposure to operational consequences of vetting delays and vehicle scheduling friction through daily duties coordinating fleet compliance at HelloFresh.</span></div>
+              </div>
+              <div class="contact-detail" style="border:none;padding:12px 0;">
+                <div class="icon"><i class="fas fa-brain"></i></div>
+                <div class="text"><strong>Complex Readiness Logic</strong><span>Practical understanding of risk management and transport logistics honed through the Transport Logistics Virtual Experience and MSc Supply Chain projects.</span></div>
+              </div>
+              <div class="contact-detail" style="border:none;padding:12px 0;">
+                <div class="icon"><i class="fas fa-rocket"></i></div>
+                <div class="text"><strong>Strategic Innovation Focus</strong><span>Converts complex industrial management concepts into usable operational systems  ensuring CORP's Readiness-Gate is grounded in real-world fleet dynamics.</span></div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-primary" style="margin-top:24px;" onclick="showPage('contact')">Connect with Saidinesh →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page about -->
+
+
+<!-- ═══ PAGE: PLATFORM ═══ -->
+<div class="page" id="page-platform">
+  <section style="background:linear-gradient(140deg,#F5F3FF 0%,#EDE9FE 60%,#DDD6FE 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Full Platform</div>
+      <h2 class="section-h2 dark">Five Intelligence Modules.<br><span style="color:var(--blue-dark);">One Complete Carrier Readiness Command Centre.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">Every feature is built specifically for the high-pressure UK logistics environment  not retrofitted from generic compliance tools. Our proprietary Readiness-Gate Architecture and multi-layer forensics translate complex carrier behaviours into actionable operational KPIs that transport managers actually need.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request Demo →</button>
+        <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="platform-grid" style="grid-template-columns:repeat(2,1fr);gap:28px;">
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="height:220px;">
+            <img src="carrier4.jpg" alt="Smart Risk Scoring" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 01 · Smart Risk Scoring</div>
+            <h3>AI-Powered Smart Risk Scoring</h3>
+            <p>AI-driven scoring model predicting carrier reliability and risk. Readiness Fingerprinting benchmarks and clones high-trust onboarding criteria across your network.</p>
+            <div class="more-text">CORP uses machine learning trained on carrier behavioural data  safety records, regional consulting norms, FMCSA/UK DfT compliance, and transport communication habits  to produce hyper-localised predictive power. This specialisation enables CORP to identify specific "readiness friction" in cold-chain pharmaceutical workflows that global generic portals cannot replicate.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="height:220px;">
+            <img src="carrier5.jpg" alt="Document Verification" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 02 · Document Verification</div>
+            <h3>Automated Document Verification</h3>
+            <p>Collect, organise, and verify all required carrier documents automatically  reducing manual work and eliminating documentation errors at scale.</p>
+            <div class="more-text">The RFFE automatically diagnoses why a carrier is "not ready"  whether due to a pending W-9, a sub-threshold safety rating, or an expired ELD certificate  and provides actionable steps for resolution. This allows a single coordinator to manage 5× the carrier volume without the manual checking bottleneck currently hampering 88% of logistics professionals.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="height:220px;">
+            <img src="carrier6.jpg" alt="Risk Management" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 03 · Risk Management</div>
+            <h3>Real-Time Risk Management</h3>
+            <p>Live dashboards for faster decisions and operational visibility. Detect fake carriers, compliance drift, and insurance gaps before a load is tendered.</p>
+            <div class="more-text">Capacity Twin Simulation virtually tests the impact of potential carrier activations against historical load volumes to find the optimal network structure before live deployment. The Outcome-Learning Readiness Memory framework encodes performance-linked carrier attributes that continuously adapts to on-time delivery and safety scores.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="height:220px;">
+            <img src="carrier7.jpg" alt="Compliance Assurance" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 04 · Compliance Assurance</div>
+            <h3>Compliance Assurance Engine</h3>
+            <p>Ensure FMCSA, insurance, safety, and regulatory compliance. Built specifically for the October 2025 USDOT unified identification mandate and UK DfT standards.</p>
+            <div class="more-text">Service-specific activation enables surgical carrier deployment  a carrier providing evidence of high-value cargo insurance and specialised reefer maintenance is "activated" for pharmaceutical transport while being restricted from unrelated hazardous waste loads. The ESG Compliance module generates audit-ready reports showing how structured onboarding reduces empty miles.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="height:220px;">
+            <img src="carrier8.jpg" alt="Trusted Carrier Network" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 05 · Trusted Partnerships</div>
+            <h3>Trusted Carrier Network (CRN)</h3>
+            <p>Build a network of safe, compliant, and high-performing carriers. The Community Readiness Network shares anonymised benchmarks across thousands of logistics firms.</p>
+            <div class="more-text">The CRN's federated learning architecture enables sharing of anonymous "Readiness DNA" without revealing sensitive carrier identities. Trends learned from high-trust carrier patterns in the US can be used to optimise the readiness strategy for a mid-sized broker in the UK  creating collective intelligence that new players would take years to build from scratch.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="height:220px;">
+            <img src="carrier9.jpg" alt="Real-Time Insights" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 06 · Real-Time Insights</div>
+            <h3>Real-Time Operational Insights</h3>
+            <p>Outcome-Linked Performance Analytics link onboarding speed and carrier reliability to financial performance  delivering "Operational Intelligence" for every logistics firm.</p>
+            <div class="more-text">Comprehensive Capacity Equity Reports transform transient employee vetting skills into permanent organisational Process Equity. The Human-in-the-Loop Governance Index assesses the reliability of automated compliance checks  reducing the manual "double-checking" burden and allowing for safe, governed scaling of carrier networks nationally and internationally.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Competitor Comparison -->
+      <div style="margin-top:60px;">
+        <div class="label-tag">Competitor Analysis</div>
+        <h2 class="section-h2 dark" style="margin-bottom:8px;">How CarrierReadiness Compares</h2>
+        <div class="section-divider divider-blue"></div>
+        <p class="para-dark" style="max-width:700px;margin-bottom:0;">CarrierReadiness is the only platform combining Active Readiness-Gate logic, Service-Specific Activation, Readiness-Failure Forensics, and UK/US regulatory compliance in a single SME-optimised SaaS.</p>
+        <div class="comp-table-wrap">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th>Feature / Capability</th>
+                <th>Enterprise TMS (McLeod/Mercury)</th>
+                <th>Compliance Portals (Highway/RMIS)</th>
+                <th>Manual Trackers (Excel/Email)</th>
+                <th style="background:var(--blue);">CarrierReadiness (CORP)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Active Readiness-Gate Logic</td><td class="no">No (Static Records)</td><td class="no">No (Vetting Only)</td><td class="no">No</td><td class="yes highlight-col">✓ Real-time gate control</td></tr>
+              <tr><td>Service-Specific Activation</td><td class="no">Limited</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Reefer/Hazmat specific</td></tr>
+              <tr><td>USDOT 2025 Transition Support</td><td class="no">Delayed Updates</td><td class="no">General Monitoring</td><td class="no">None</td><td class="yes highlight-col">✓ Built for 2025 Mandates</td></tr>
+              <tr><td>Readiness-Failure Forensics</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ RFFE Automated Diagnosis</td></tr>
+              <tr><td>Outcome Learning Memory</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Performance-linked re-activation</td></tr>
+              <tr><td>Ready-with-Conditions Mode</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Conditional capacity release</td></tr>
+              <tr><td>Fraud Mitigation Architecture</td><td class="no">Identity Check only</td><td class="no">High (Identity only)</td><td class="no">Low</td><td class="yes highlight-col">✓ Identity + Readiness DNA</td></tr>
+              <tr><td>Target Customer Segment</td><td class="no">Global Enterprise</td><td class="no">Large Brokerages</td><td class="no">Small Ops</td><td class="yes highlight-col">✓ Logistics SMEs & Mid-Market</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page platform -->
+
+
+<!-- ═══ PAGE: MARKET ═══ -->
+<div class="page" id="page-market">
+  <section style="background:linear-gradient(140deg,#F5F3FF 0%,#EDE9FE 50%,#DDD6FE 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Market Analysis</div>
+      <h2 class="section-h2 dark">A $4.2 Billion Market Opportunity.<br><span style="color:var(--blue-dark);">CarrierReadiness is the Solution.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">The global carrier onboarding and compliance market was valued at $1.3 billion in 2024 and is projected to reach $4.2 billion by 2033 at a 13.9% CAGR. The UK digital logistics market reached $563.3 million in 2025. Yet only 12% of companies feel their vetting process is well-executed  leaving a massive gap that CarrierReadiness fills.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request Demo →</button>
+        <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Market Data & Intelligence</div>
+      <h2 class="section-h2 dark">The Numbers Behind the Opportunity</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h4>UK Logistics SAM by Segment (£M)</h4>
+          <p>Target addressable market across UK freight and logistics hubs</p>
+          <div class="chart-wrap"><canvas id="chartSector"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>Key Operational Pain Points  UK Logistics Leaders</h4>
+          <p>Primary challenges driving adoption of CarrierReadiness</p>
+          <div class="chart-wrap"><canvas id="chartRootCause"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>CarrierReadiness vs Competitors  Capability Radar</h4>
+          <p>Platform capabilities vs existing market alternatives</p>
+          <div class="chart-wrap"><canvas id="chartRadar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>Global Carrier Compliance Market Growth 2024–2033</h4>
+          <p>Global market (USD B) + UK digital logistics adoption (%)</p>
+          <div class="chart-wrap"><canvas id="chartGrowth"></canvas></div>
+        </div>
+      </div>
+      <div class="charts-grid" style="grid-template-columns:1fr;margin-top:32px;">
+        <div class="chart-card">
+          <h4>Platform Feature Comparison  CarrierReadiness vs Market Average</h4>
+          <p>Capability scores across key operational intelligence dimensions (out of 100)</p>
+          <div class="chart-wrap"><canvas id="chartPerf"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Revenue Projections -->
+  <section class="section-blue">
+    <div class="container">
+      <div class="label-tag-white">Financial Projections</div>
+      <h2 class="section-h2 white">3-Year Revenue Trajectory</h2>
+      <div class="section-divider divider-white"></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">£104K</div>
+          <div class="stat-lbl">Year 1 Revenue · 75 active clients · East Midlands & London pilots · SaaS + API setup fees</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£439K</div>
+          <div class="stat-lbl">Year 2 Revenue · 50–100 agencies · Full UK launch · £119K net profit · TMS integrations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£896K</div>
+          <div class="stat-lbl">Year 3 Revenue · 200+ UK firms · £269K net profit · EU/USA pilots · CRN scaling</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">20+</div>
+          <div class="stat-lbl">High-value UK-based logistics-tech and AI operations roles created by Year 5 at platform maturity</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page market -->
+
+
+<!-- ═══ PAGE: PROCESS ═══ -->
+<div class="page" id="page-process">
+  <section style="background:linear-gradient(140deg,#F5F3FF 0%,#EDE9FE 50%,#DDD6FE 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">How It Works</div>
+      <h2 class="section-h2 dark">From Passive Document Chase<br>to <span style="color:var(--blue-dark);">Active Carrier Readiness Orchestration</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">CarrierReadiness operates as a closed-loop readiness intelligence lifecycle  capturing, diagnosing, activating, and continuously evolving your carrier network's compliance logic, so every load decision is grounded in real data, not guesswork or reactive firefighting.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request a Demo →</button>
+        <button class="btn-secondary" onclick="showPage('platform')">Explore Modules</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light" style="padding-top:clamp(60px,8vw,96px);">
+    <div class="container">
+      <div class="label-tag">The 5-Phase Readiness Intelligence Lifecycle</div>
+      <h2 class="section-h2 dark">A Complete Carrier Readiness Loop  Not Just a Checklist</h2>
+      <div class="section-divider divider-blue"></div>
+
+      <!-- Phase 1 -->
+      <div class="process-step">
+        <div>
+          <div class="step-num">Phase 01 · Register</div>
+          <h3 class="step-h3">Carrier Registration & Profile Capture</h3>
+          <p class="step-p">CarrierReadiness captures carrier information seamlessly  including identity documents, insurance certificates, route capabilities, safety ratings, and service-specific certifications  to build a comprehensive Carrier Readiness Profile and baseline Onboarding Readiness Score.</p>
+          <p class="step-p">The Registration phase surfaces the hidden compliance gaps in your existing carrier pool  giving you a precise, data-driven view of your "Readiness Gap" before any load is tendered.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Automated Profile Capture</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>Baseline Readiness Score</span>
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Zero Code Required</span>
+          </div>
+        </div>
+        <div class="step-img">
+          <img src="carrier10.jpg" alt="Carrier Registration" style="width:100%;height:100%;object-fit:cover;border-radius:16px;">
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="process-step">
+        <div class="step-img">
+          <img src="carrier11.jpg" alt="Document Collection" style="width:100%;height:100%;object-fit:cover;border-radius:16px;">
+        </div>
+        <div>
+          <div class="step-num">Phase 02 · Collect</div>
+          <h3 class="step-h3">Document Collection & Real-Time Verification</h3>
+          <p class="step-p">The Document Engine ingests live data from your carrier submissions  tracking insurance expiry, ELD certificates, safety ratings, and rate card agreements on a continuous basis. Automated alerts flag compliance stalls the moment they emerge.</p>
+          <p class="step-p">Think of it as a 24/7 compliance manager watching every carrier document  objective, continuous, and immediately actionable.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Live Compliance Dashboard</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>Automated Readiness Alerts</span>
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Insurance API Integration</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="process-step">
+        <div>
+          <div class="step-num">Phase 03 · Assess</div>
+          <h3 class="step-h3">AI Assessment & Validation  Catch Compliance Failures Before They Cost You</h3>
+          <p class="step-p">The RFFE cross-checks submitted carrier data against required documentation standards. Missing W-9? Sub-threshold safety rating? Expired ELD? The RFFE catches them all and automatically deconstructs the gap into a structured "Readiness Report" with one-click resolution options.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Automated Failure Detection</span>
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Readiness-Failure Forensics</span>
+          </div>
+        </div>
+        <div class="step-img">
+          <img src="carrier12.jpg" alt="AI Assessment" style="width:100%;height:100%;object-fit:cover;border-radius:16px;">
+        </div>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="process-step">
+        <div class="step-img">
+          <img src="carrier13.jpg" alt="Risk and Compliance Check" style="width:100%;height:100%;object-fit:cover;border-radius:16px;">
+        </div>
+        <div>
+          <div class="step-num">Phase 04 · Activate</div>
+          <h3 class="step-h3">Risk & Compliance Check  Service-Specific Carrier Activation</h3>
+          <p class="step-p">When a carrier passes all readiness gates, the Operational Permission Engine activates them for specific lanes with surgical precision  Pharma, Reefer, Hazmat, General Haulage  while blocking them from unrelated load types. The platform resolves 85% of compliance conflicts without manual intervention.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Service-Specific Activation</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>Ready-with-Conditions Mode</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 5 -->
+      <div class="process-step">
+        <div>
+          <div class="step-num">Phase 05 · Benchmark</div>
+          <h3 class="step-h3">Community Readiness Network  Learn From the Best</h3>
+          <p class="step-p">The CRN enables anonymised "Readiness DNA" benchmarks from thousands of logistics firms to improve predictive models continuously. Carrier reliability trends from high-efficiency US freight corridors can inform a UK mid-sized broker's network strategy  without revealing sensitive commercial data.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Sector-Wide Efficiency Insights</span>
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Privacy-Safe Benchmarking</span>
+          </div>
+        </div>
+        <div class="step-img">
+          <img src="carrier14.jpg" alt="Carrier Network" style="width:100%;height:100%;object-fit:cover;border-radius:16px;">
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div><!-- end page process -->
+
+
+<!-- ═══ PAGE: FAQ ═══ -->
+<div class="page" id="page-faq">
+  <section style="background:linear-gradient(140deg,#F5F3FF 0%,#EDE9FE 60%,#DDD6FE 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">FAQ</div>
+      <h2 class="section-h2 dark">Frequently Asked Questions</h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:600px;">Everything you need to know about CarrierReadiness and what it means for your logistics firm's operational efficiency in the active readiness era.</p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container" style="max-width:840px;">
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What is CarrierReadiness and why does my logistics firm need it?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">CarrierReadiness (CORP) is an AI-powered platform that assesses, validates, and accelerates carrier onboarding  ensuring compliance, reducing risk, improving data accuracy, and enabling faster time-to-route. Unlike standard compliance portals that serve as passive document repositories, CORP establishes a "Live Readiness-Gate" that continuously monitors carrier status in real time. Pilot validations have demonstrated a 28% average increase in onboarding speed and a 22% reduction in compliance errors.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>How is this different from traditional compliance portals like Highway or RMIS?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Traditional compliance portals tell you if a carrier is "safe"  but not if they are "ready" to move a specific refrigerated load from Derby to London with the correct equipment certifications. CORP unifies insurance status, service-specific capabilities, and load-execution tracking into a single technical pipeline. The RFFE identifies in real time how a compliance break (e.g. insurance expiry) is impacting usable fleet capacity  a bridge that current siloed competitors have not overcome.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>Which existing systems does CarrierReadiness integrate with?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">CarrierReadiness is built as a model-agnostic infrastructure  it sits above any underlying TMS or ERP including McLeod, MercuryGate, and major ELD providers. The platform connects via secure API nodes (£200 one-off setup) that capture live compliance signals from existing systems without requiring a full technology replacement. Integration is typically completed within hours, not weeks, allowing immediate carrier readiness governance.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What is "Capacity Equity" and why does preserving it matter?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Capacity Equity is the proprietary operational vetting logic that experienced transport coordinators carry  knowing which carriers are reliable for specific lane types, how to handle documentation gaps, and how to scale fleet capacity without compliance exposure. With high staff turnover in UK logistics, this knowledge is permanently lost every time a senior coordinator departs. CarrierReadiness captures and encodes this intelligence into machine-executable "Readiness Logic," ensuring new staff reach vetting proficiency in 14 days instead of 45.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>Is CarrierReadiness compliant with UK and US data regulations?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Yes. CarrierReadiness is architecturally designed to comply with UK GDPR, ICO guidance on AI and Data Protection, the UK's Principles-Based AI Framework (DSIT), and the October 2025 FMCSA unified USDOT identification mandate. The platform provides audit-ready forensic reporting for regulatory compliance inquiries. Secure "Readiness Nodes" with end-to-end encryption ensure sensitive carrier identification data is captured without compromising data privacy standards.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What sectors and logistics types does CarrierReadiness serve?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">CarrierReadiness is purpose-built for UK and US independent 3PL brokerages, food distribution and cold-chain agencies, high-volume courier and last-mile houses, and founder-led transport services where the founder is the primary source of carrier vetting expertise. The platform is particularly powerful for SMEs in the East Midlands "Golden Triangle" needing structured onboarding to support rapid scale without proportional headcount growth.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>How do I get started with CarrierReadiness?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Getting started is simple  no code required. After selecting your plan (from £150/month), you complete a Readiness Baseline setup session (approximately 60 minutes) where you input your carrier data and compliance requirements. Secure API Nodes are configured to connect to existing TMS and ELD systems. Your first Carrier Readiness Dashboard goes live within 24–48 hours, and our Carrier Success team guides you through the onboarding process to ensure you extract maximum value from day one.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page faq -->
+
+
+<!-- ═══ PAGE: PRICING ═══ -->
+<div class="page" id="page-pricing">
+  <section style="background:linear-gradient(140deg,#F5F3FF 0%,#EDE9FE 60%,#DDD6FE 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container" style="text-align:center;">
+      <div class="label-tag" style="justify-content:center;">Pricing</div>
+      <h2 class="section-h2 dark">Simple, Transparent Plans<br>for Every Logistics Firm Size</h2>
+      <div class="section-divider divider-blue divider-center"></div>
+      <p class="para-dark" style="max-width:580px;margin:0 auto;">From independent freight brokerages to multi-site 3PL groups  CarrierReadiness has a plan designed for your operational intelligence needs. SME-optimised pricing starting from just £150/month.</p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">Starter</div>
+          <div class="price-title">Readiness Core</div>
+          <div class="price-amount">£150<span>/mo</span></div>
+          <p class="price-desc">For independent hauliers and boutique 3PLs needing core document tracking and carrier readiness archiving.</p>
+          <ul class="price-features">
+            <li>Workflow tracking & readiness archiving</li>
+            <li>Carrier readiness library</li>
+            <li>Basic compliance metrics</li>
+            <li>Browser layer access</li>
+            <li>Standard document verification</li>
+            <li>Monthly readiness report</li>
+            <li>Standard onboarding support</li>
+          </ul>
+          <button class="btn-secondary" onclick="showPage('contact')">Get Started</button>
+        </div>
+        <div class="price-card featured">
+          <div class="featured-label">Most Popular</div>
+          <div class="price-tier">Professional</div>
+          <div class="price-title">Active Architect</div>
+          <div class="price-amount">£400<span>/mo</span></div>
+          <p class="price-desc">For high-volume haulage and consulting firms needing Readiness Fingerprinting, Service-Specific Activation, and TMS sync.</p>
+          <ul class="price-features">
+            <li>Readiness Fingerprinting Engine</li>
+            <li>Service-Specific Activation (Reefer/Hazmat)</li>
+            <li>Outcome Learning Memory</li>
+            <li>TMS & Slack synchronisation</li>
+            <li>RFFE forensics dashboard</li>
+            <li>Weekly readiness reports</li>
+            <li>Priority Carrier Success support</li>
+          </ul>
+          <button class="btn-primary" onclick="showPage('contact')">Start Free Trial</button>
+        </div>
+        <div class="price-card">
+          <div class="price-tier">Enterprise</div>
+          <div class="price-title">Readiness Sovereign</div>
+          <div class="price-amount">£350<span>/mo</span></div>
+          <p class="price-desc">For multi-site agencies and corporate logistics teams needing custom forensics, secure Logic Nodes, and full CRN access.</p>
+          <ul class="price-features">
+            <li>Custom fraud forensics engine</li>
+            <li>Secure Logic Nodes included</li>
+            <li>Full CRN benchmarking access</li>
+            <li>Dedicated Carrier Success Manager</li>
+            <li>Multi-site capacity DNA audits</li>
+            <li>Audit-ready compliance reports</li>
+            <li>API licensing capabilities</li>
+            <li>Priority onboarding & training</li>
+          </ul>
+          <button class="btn-secondary" onclick="showPage('contact')">Contact Us</button>
+        </div>
+      </div>
+
+      <!-- Add-ons -->
+      <div style="margin-top:48px;">
+        <div class="label-tag">Professional Add-Ons</div>
+        <h2 class="section-h2 dark" style="font-size:clamp(22px,2.5vw,32px);margin-bottom:8px;">Additional Services</h2>
+        <div class="section-divider divider-blue"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px;" class="addons-grid">
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-plug"></i></div>
+            <h4>API & Integration Sync  £200 (One-time)</h4>
+            <p>One-time setup fee for TMS calibration, ELD provider integration, and secure carrier data migration. Covers McLeod, MercuryGate, and major UK ELD providers.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-search-dollar"></i></div>
+            <h4>Compliance Health Audit  £400 (One-time)</h4>
+            <p>Custom DNA Audits of legacy carrier lists, identification of compliance drift patterns, and team-wide "Readiness Logic" training for transport coordinators.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page pricing -->
+
+
+<!-- ═══ PAGE: CONTACT ═══ -->
+<div class="page" id="page-contact">
+  <section style="background:linear-gradient(140deg,#F5F3FF 0%,#EDE9FE 50%,#DDD6FE 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Contact Us</div>
+      <h2 class="section-h2 dark">Request a Demo or<br>Join the Pilot Programme</h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:600px;">Ready to transform your carrier onboarding from a passive document chase into an active readiness-control system? Get in touch with the CarrierReadiness team today.</p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="contact-wrap">
+        <div class="contact-form">
+          <h3 style="font-family:var(--display);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:22px;">Book a Platform Demo</h3>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="Your full name" required>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="your@company.com" required>
+          </div>
+          <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" placeholder="Your logistics firm or 3PL name">
+          </div>
+          <div class="form-group">
+            <label>Business Type</label>
+            <select>
+              <option>3PL Brokerage</option>
+              <option>Food Distribution / Cold-Chain</option>
+              <option>General Haulage</option>
+              <option>Last-Mile Courier</option>
+              <option>Fleet Operator</option>
+              <option>Insurance Provider</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>What are you most interested in?</label>
+            <textarea placeholder="Tell us about your carrier onboarding challenges, current compliance tools, or the features you'd like to explore..." required></textarea>
+          </div>
+          <button class="btn-primary" style="width:100%;justify-content:center;" type="button" onclick="alert('Demo request submitted! We will contact you within 24 hours.')">Request Demo →</button>
+        </div>
+
+        <!-- CONTACT INFO -->
+        <div class="contact-info">
+          <h3>Why Book a Demo?</h3>
+          <p>Our personalised demos show your firm's actual Carrier Readiness baseline, Onboarding Speed metrics, and Compliance Health scores using your real operational context  not generic examples or static presentations. We demonstrate how the Readiness-Gate Architecture, RFFE Forensics, and Community Readiness Network work together to reduce onboarding time, protect capacity equity, and scale your carrier network with confidence.</p>
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-envelope"></i></div>
+            <div class="text"><strong>Email Us</strong><span>saidinesh@carrierreadiness.co.uk</span></div>
+          </div>
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-phone"></i></div>
+            <div class="text"><strong>Phone</strong><span>+44 7767 000000 · Saidinesh Chinnaramannagari</span></div>
+          </div>
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="text"><strong>UK Headquarters</strong><span>Derby / Leicester, East Midlands  Golden Triangle</span></div>
+          </div>
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-clock"></i></div>
+            <div class="text"><strong>Response Time</strong><span>Within 24 hours · Mon–Fri 9am–6pm GMT</span></div>
+          </div>
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-shield-alt"></i></div>
+            <div class="text"><strong>Data Privacy</strong><span>UK GDPR · ICO Registered · Readiness-Node Secured</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page contact -->
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">CarrierReadiness</div>
+        <p class="footer-desc">The UK's first AI-powered Carrier Onboarding Readiness Platform  measuring, validating, and activating every carrier in real time. Assess. Validate. Onboard. Reduce Risk. Build Trust.</p>
+        <div class="footer-badges">
+          <span class="footer-badge">UK GDPR Compliant</span>
+          <span class="footer-badge">ICO Registered</span>
+          <span class="footer-badge">FMCSA Aligned</span>
+          <span class="footer-badge">Net Zero Aligned</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <div class="footer-col">
+          <a onclick="showPage('platform')">Readiness-Gate Architecture</a>
+          <a onclick="showPage('platform')">Readiness-Failure Forensics (RFFE)</a>
+          <a onclick="showPage('platform')">Service-Specific Activation</a>
+          <a onclick="showPage('platform')">Capacity Twin Simulation</a>
+          <a onclick="showPage('platform')">Community Readiness Network</a>
+          <a onclick="showPage('platform')">Outcome Learning Memory</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <div class="footer-col">
+          <a onclick="showPage('about')">About CarrierReadiness</a>
+          <a onclick="showPage('about')">Saidinesh · Founder & CEO</a>
+          <a onclick="showPage('process')">How It Works</a>
+          <a onclick="showPage('faq')">FAQ</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('pricing')">Pricing & Plans</a>
+          <a onclick="showPage('contact')">Request a Demo</a>
+          <a onclick="showPage('contact')">Pilot Programme</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Solutions</div>
+        <div class="footer-col">
+          <a onclick="showPage('platform')">3PL Brokerages</a>
+          <a onclick="showPage('platform')">Food Distribution / Cold-Chain</a>
+          <a onclick="showPage('platform')">General Haulage SMEs</a>
+          <a onclick="showPage('platform')">Last-Mile Courier Houses</a>
+          <a onclick="showPage('pricing')">Readiness Core · £150/mo</a>
+          <a onclick="showPage('pricing')">Active Architect · £400/mo</a>
+          <a onclick="showPage('pricing')">Readiness Sovereign · £350/mo</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom-bar">
+      <p>© 2026 <span>CarrierReadiness (CORP)</span> · Derby & London, UK · UK GDPR Compliant · by Saidinesh Chinnaramannagari</p>
+      <div class="footer-bottom-links">
+        <a onclick="showPage('contact')">Privacy Policy</a>
+        <a onclick="showPage('contact')">Terms of Service</a>
+        <a onclick="showPage('contact')">Confidential Business Plan</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- JAVASCRIPT -->
+<script>
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+name);
+  if(pg){pg.classList.add('active');}
+  const btn=document.getElementById('nav-'+name);
+  if(btn){btn.classList.add('active');}
+  window.scrollTo({top:0,behavior:'instant'});
+  if(name==='market'&&!window.marketChartsLoaded){initMarketCharts();window.marketChartsLoaded=true;}
+}
+
+function toggleCard(btn){
+  const card=btn.closest('.platform-card');
+  card.classList.toggle('open');
+  btn.innerHTML=card.classList.contains('open')?'Show Less':'Learn More';
+}
+
+function toggleFAQ(el){el.parentElement.classList.toggle('open');}
+
+function closeMobile(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('open');
+  document.getElementById('mobileNav').classList.toggle('open');
+});
+
+/* ─── CHART THEME ─── */
+const BLU='rgba(107,33,168,1)';
+const BLU2='rgba(107,33,168,0.7)';
+const BLU3='rgba(107,33,168,0.35)';
+const LBLU='rgba(168,85,247,0.8)';
+const LBLU2='rgba(237,233,254,0.9)';
+const GRID='rgba(107,33,168,0.08)';
+const MUTED='rgba(59,28,110,0.8)';
+
+Chart.defaults.font.family="'IBM Plex Mono', monospace";
+Chart.defaults.font.size=11;
+Chart.defaults.color=MUTED;
+
+function initMarketCharts(){
+  new Chart(document.getElementById('chartSector').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['3PL Brokerages','Food/Cold-Chain','General Haulage','Last-Mile Courier'],
+      datasets:[{
+        label:'SAM (£ Millions)',
+        data:[140,95,70,55],
+        backgroundColor:[BLU,BLU2,BLU3,LBLU],
+        borderRadius:6,barPercentage:0.6
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'£'+v+'M'}}}}
+  });
+
+  new Chart(document.getElementById('chartRootCause').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:['Inconsistent Carrier Data (28%)','Lack of Service-Specific Vetting (27.5%)','Fraud & Security Concerns (17.6%)','Manual Verification Burden (49.5%)','No Readiness Forensics (16%)'],
+      datasets:[{
+        data:[28,27.5,17.6,49.5,16],
+        backgroundColor:[BLU,BLU2,BLU3,LBLU,LBLU2],
+        borderWidth:1.5
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:10,font:{size:10}}}}}
+  });
+
+  new Chart(document.getElementById('chartRadar').getContext('2d'),{
+    type:'radar',
+    data:{
+      labels:['Active Readiness-Gate','Service-Specific Activation','RFFE Forensics','Outcome Learning','CRN Benchmarking','UK/US 2025 Compliance'],
+      datasets:[
+        {label:'CarrierReadiness',data:[5,5,5,5,5,5],backgroundColor:'rgba(107,33,168,0.1)',borderColor:BLU,borderWidth:2,pointBackgroundColor:BLU},
+        {label:'Enterprise TMS (McLeod)',data:[2,1,1,1,1,2],backgroundColor:'rgba(168,85,247,0.06)',borderColor:LBLU,borderWidth:1.5,pointBackgroundColor:LBLU},
+        {label:'Compliance Portals (Highway)',data:[1,1,2,1,1,3],backgroundColor:'rgba(168,85,247,0.05)',borderColor:'rgba(168,85,247,0.5)',borderWidth:1.5,pointBackgroundColor:'rgba(168,85,247,0.5)'},
+        {label:'Manual Trackers (Excel)',data:[1,1,1,1,1,1],backgroundColor:'rgba(59,28,110,0.05)',borderColor:'rgba(59,28,110,0.4)',borderWidth:1.5,pointBackgroundColor:'rgba(59,28,110,0.4)'},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{r:{backgroundColor:'rgba(107,33,168,0.01)',grid:{color:GRID},pointLabels:{color:MUTED,font:{size:10}},ticks:{display:false},min:0,max:5}}}
+  });
+
+  new Chart(document.getElementById('chartGrowth').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['2024','2025','2026','2027','2028','2029','2030','2033'],
+      datasets:[
+        {label:'Global Carrier Compliance Market (USD B)',data:[1.3,1.5,1.7,2.1,2.5,3.0,3.5,4.2],backgroundColor:BLU2,borderRadius:5,barPercentage:0.55},
+        {type:'line',label:'UK Digital Logistics Adoption %',data:[null,8,14,22,32,44,56,80],borderColor:LBLU,borderWidth:2,yAxisID:'y2',tension:0.4,pointBackgroundColor:LBLU,fill:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:12,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'$'+v+'B'}},y2:{position:'right',grid:{display:false},ticks:{color:MUTED,callback:v=>v+'%'}}}}
+  });
+
+  new Chart(document.getElementById('chartPerf').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Active Readiness-Gate','Service-Specific Activation','RFFE Forensics','Outcome Learning','CRN Benchmarking','UK/US Regulatory'],
+      datasets:[
+        {label:'CarrierReadiness',data:[98,97,95,96,93,98],backgroundColor:BLU2,borderRadius:5,barPercentage:0.35},
+        {label:'Market Average',data:[4,3,5,2,1,4],backgroundColor:LBLU2,borderRadius:5,barPercentage:0.35}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED,font:{size:9}}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>v+' pts'}}}}
+  });
+}
+</script>
+</body>
+</html>
